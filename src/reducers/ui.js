@@ -45,7 +45,6 @@ export default createReducer(initialState, {
   ),
 
   [oAuthSignInActions.OAUTH_SIGN_IN_COMPLETE]: state => state.merge({
-    oAuthSignInSuccessModalVisible: true,
     oAuthSignInLoadingProvider: null
   }),
 

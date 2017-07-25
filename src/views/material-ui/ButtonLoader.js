@@ -5,6 +5,13 @@ import * as Colors from "material-ui/styles/colors";
 import Spinner from "react-loader";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+const myStorybookTheme = getMuiTheme({
+  palette: {
+    primary1Color: blue800,
+    accent1Color: red400
+  }
+});
+
 class ButtonLoader extends React.Component {
   static propTypes = {
     icon: PropTypes.any,
@@ -108,7 +115,7 @@ class ButtonLoader extends React.Component {
     };
 
    return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={myStorybookTheme}>
         <RaisedButton
           {...props}
           onClick={this.handleClick.bind(this)}>
