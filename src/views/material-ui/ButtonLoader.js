@@ -4,6 +4,7 @@ import ActionFavorite from "material-ui/svg-icons/action/favorite";
 import * as Colors from "material-ui/styles/colors";
 import Spinner from "react-loader";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from "material-ui/styles/getMuiTheme";
 
 const myStorybookTheme = getMuiTheme({
   palette: {
