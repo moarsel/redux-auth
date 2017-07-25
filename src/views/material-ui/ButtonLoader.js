@@ -4,14 +4,14 @@ import ActionFavorite from "material-ui/svg-icons/action/favorite";
 import * as Colors from "material-ui/styles/colors";
 import Spinner from "react-loader";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from "material-ui/styles/getMuiTheme";
-import { blue800, red400 } from "material-ui/styles/colors";
-const myStorybookTheme = getMuiTheme({
-  palette: {
-    primary1Color: blue800,
-    accent1Color: red400
-  }
-});
+// import getMuiTheme from "material-ui/styles/getMuiTheme";
+// import { blue800, red400 } from "material-ui/styles/colors";
+// const myStorybookTheme = getMuiTheme({
+//   palette: {
+//     primary1Color: blue800,
+//     accent1Color: red400
+//   }
+// });
 
 class ButtonLoader extends React.Component {
   static propTypes = {
@@ -116,7 +116,7 @@ class ButtonLoader extends React.Component {
     };
 
    return (
-      <MuiThemeProvider muiTheme={myStorybookTheme}>
+      <MuiThemeProvider>
         <RaisedButton
           {...props}
           onClick={this.handleClick.bind(this)}>
