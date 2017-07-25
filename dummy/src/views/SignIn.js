@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Component } from "react";
 import { PageHeader } from "react-bootstrap";
 import { connect } from "react-redux";
 import { EmailSignInForm } from "../../../src/views/bootstrap";
 import { browserHistory } from "react-router";
 
-class SignIn extends React.Component {
+class SignIn extends Component {
   render () {
     return (
       <div>

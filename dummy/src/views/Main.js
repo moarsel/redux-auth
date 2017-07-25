@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import IndexPanel from "./partials/IndexPanel";
 import CodeSnippet from "./partials/CodeSnippet";
 import ExampleWell from "./partials/ExampleWell";
@@ -13,7 +13,7 @@ import * as MUITheme from "../../../src/views/material-ui";
 import Select from "react-select";
 
 
-class Main extends React.Component {
+class Main extends Component {
   updateTheme ({value}) {
     this.props.dispatch(updateDemoTheme(value));
   }

@@ -4,15 +4,15 @@ import TextField from "material-ui/TextField";
 import AlertError from "material-ui/svg-icons/alert/error";
 import Immutable from "immutable";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from "material-ui/styles/getMuiTheme";
-import { blue800, red400 } from "material-ui/styles/colors";
+// import getMuiTheme from "material-ui/styles/getMuiTheme";
+// import { blue800, red400 } from "material-ui/styles/colors";
 
-const myStorybookTheme = getMuiTheme({
-  palette: {
-    primary1Color: blue800,
-    accent1Color: red400
-  }
-});
+// const myStorybookTheme = getMuiTheme({
+//   palette: {
+//     primary1Color: blue800,
+//     accent1Color: red400
+//   }
+// });
 
 class AuthInput extends React.Component {
   static propTypes = {
@@ -61,7 +61,7 @@ class AuthInput extends React.Component {
 
   render () {
     return (
-      <MuiThemeProvider muiTheme={myStorybookTheme}>
+      <MuiThemeProvider>
         <TextField
           fullWidth={true}
           id={this.props.className}

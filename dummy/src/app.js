@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component } from "react";
 import {Provider} from "react-redux";
 import {Route, IndexRoute} from "react-router";
 import {configure, authStateReducer} from "../../src";
@@ -15,7 +15,7 @@ import Account from "./views/Account";
 import SignIn from "./views/SignIn";
 import GlobalComponents from "./views/partials/GlobalComponents";
 
-class App extends React.Component {
+class App extends Component {
   render() {
     return (
       <Container>

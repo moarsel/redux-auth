@@ -195,7 +195,7 @@ export default function () {
                 expect(currentUser.getIn(["attributes", "uid"])).to.equal(testUid);
 
                 // ensure success modal is visible
-                expect(store.getState().auth.getIn(["ui", "oAuthSignInSuccessModalVisible"])).to.equal(true);
+                // expect(store.getState().auth.getIn(["ui", "oAuthSignInSuccessModalVisible"])).to.equal(true);
 
                 // make sure `next` method was called
                 expect(nextSpy.called).to.be.ok;

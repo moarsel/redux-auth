@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Component } from "react";
 import { PageHeader } from "react-bootstrap";
 import { connect } from "react-redux";
 import { SignOutButton } from "../../../src/views/bootstrap";
 import { browserHistory } from "react-router";
 
-class Account extends React.Component {
+class Account extends Component {
   render () {
     return (
       <div>

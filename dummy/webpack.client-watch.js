@@ -23,7 +23,7 @@ config.plugins = [
 ];
 
 config.module.postLoaders = [
-  {test: /\.js$/, loaders: ["react-hot"], exclude: /node_modules/}
+  {test: /\.js$/, loaders: ['react-hot-loader/webpack'], exclude: /node_modules/}
 ]
 
 config.devServer = {
