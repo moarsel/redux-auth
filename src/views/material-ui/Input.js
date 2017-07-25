@@ -5,6 +5,7 @@ import AlertError from "material-ui/svg-icons/alert/error";
 import Immutable from "immutable";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from "material-ui/styles/getMuiTheme";
+import { blue800, red400 } from "material-ui/styles/colors";
 
 const myStorybookTheme = getMuiTheme({
   palette: {
