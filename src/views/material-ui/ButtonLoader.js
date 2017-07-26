@@ -116,13 +116,11 @@ class ButtonLoader extends React.Component {
     };
 
    return (
-      <MuiThemeProvider>
         <RaisedButton
           {...props}
           onClick={this.handleClick.bind(this)}>
           {this.renderIcon()}
         </RaisedButton>
-      </MuiThemeProvider>
     );
   }
 }
