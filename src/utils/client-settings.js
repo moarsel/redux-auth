@@ -72,6 +72,8 @@ export function applyConfig({
   reset = false
 } = {}) {
   let currentEndpointKey;
+  debugger;
+  console.log("ok ok ok");
 
   if (reset) {
     resetConfig();
