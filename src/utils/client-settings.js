@@ -2,7 +2,7 @@ import * as C from "./constants";
 import extend from "extend";
 import fetch from "./fetch";
 import parseEndpointConfig from "./parse-endpoint-config";
-import {setEndpointKeys} from "../actions/configure";
+import { setEndpointKeys } from "../actions/configure";
 import {
   getApiUrl,
   getCurrentSettings,
@@ -20,33 +20,35 @@ import {
 var root = Function("return this")() || (42, eval)("this");
 
 const defaultSettings = {
-  proxyIf:            function() { return false; },
-  proxyUrl:           "/proxy",
-  forceHardRedirect:  false,
-  storage:            "cookies",
-  cookieExpiry:       14,
-  cookiePath:         "/",
+  proxyIf: function() {
+    return false;
+  },
+  proxyUrl: "/proxy",
+  forceHardRedirect: false,
+  storage: "cookies",
+  cookieExpiry: 14,
+  cookiePath: "/",
   initialCredentials: null,
 
   passwordResetSuccessUrl: function() {
     return root.location.href;
   },
 
-  confirmationSuccessUrl:  function() {
+  confirmationSuccessUrl: function() {
     return root.location.href;
   },
 
   tokenFormat: {
     "access-token": "{{ access-token }}",
-    "token-type":   "Bearer",
-    client:         "{{ client }}",
-    expiry:         "{{ expiry }}",
-    uid:            "{{ uid }}"
+    "token-type": "Bearer",
+    client: "{{ client }}",
+    expiry: "{{ expiry }}",
+    uid: "{{ uid }}"
   },
 
-  parseExpiry: function(headers){
+  parseExpiry: function(headers) {
     // convert from ruby time (seconds) to js time (millis)
-    return (parseInt(headers["expiry"], 10) * 1000) || null;
+    return parseInt(headers["expiry"], 10) * 1000 || null;
   },
 
   handleLoginResponse: function(resp) {
@@ -63,7 +65,12 @@ const defaultSettings = {
 };
 
 // save session configuration
-export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}) {
+export function applyConfig({
+  dispatch,
+  endpoint = {},
+  settings = {},
+  reset = false
+} = {}) {
   let currentEndpointKey;
 
   if (reset) {
@@ -76,8 +83,9 @@ export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}
 
   setCurrentSettings(extend({}, defaultSettings, settings));
 
-  let {defaultEndpointKey, currentEndpoint} = parseEndpointConfig(
-    endpoint, getInitialEndpointKey()
+  let { defaultEndpointKey, currentEndpoint } = parseEndpointConfig(
+    endpoint,
+    getInitialEndpointKey()
   );
 
   if (!currentEndpointKey) {
@@ -88,27 +96,37 @@ export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}
   setDefaultEndpointKey(defaultEndpointKey);
   setCurrentEndpoint(currentEndpoint);
 
-  dispatch(setEndpointKeys(Object.keys(currentEndpoint), currentEndpointKey, defaultEndpointKey));
+  dispatch(
+    setEndpointKeys(
+      Object.keys(currentEndpoint),
+      currentEndpointKey,
+      defaultEndpointKey
+    )
+  );
   setCurrentEndpointKey(currentEndpointKey);
 
   let savedCreds = retrieveData(C.SAVED_CREDS_KEY);
 
   if (getCurrentSettings().initialCredentials) {
+    debugger;
     // skip initial headers check (i.e. check was already done server-side)
-    let {user, headers} = getCurrentSettings().initialCredentials;
+    let { user, headers } = getCurrentSettings().initialCredentials;
     persistData(C.SAVED_CREDS_KEY, headers);
     return Promise.resolve(user);
   } else if (savedCreds) {
     // verify session credentials with API
-    return fetch(`${getApiUrl(currentEndpointKey)}${currentEndpoint[currentEndpointKey].tokenValidationPath}`)
-    .then(response => {
-          if (response.status >= 200 && response.status < 300) {
-            return response.json().then(({ data }) => (data));
-          }
-          removeData(C.SAVED_CREDS_KEY);
-          return Promise.reject({reason: "No credentials."});
+    return fetch(
+      `${getApiUrl(currentEndpointKey)}${
+        currentEndpoint[currentEndpointKey].tokenValidationPath
+      }`
+    ).then(response => {
+      if (response.status >= 200 && response.status < 300) {
+        return response.json().then(({ data }) => data);
+      }
+      removeData(C.SAVED_CREDS_KEY);
+      return Promise.reject({ reason: "No credentials." });
     });
   } else {
-    return Promise.reject({reason: "No credentials."})
+    return Promise.reject({ reason: "No credentials." });
   }
 }
