@@ -2,7 +2,8 @@ import * as C from "./constants";
 import extend from "extend";
 import fetch from "./fetch";
 import parseEndpointConfig from "./parse-endpoint-config";
-import { setEndpointKeys } from "../actions/configure";
+import {parseResponse} from "./handle-fetch-response";
+import {setEndpointKeys} from "../actions/configure";
 import {
   getApiUrl,
   getCurrentSettings,
@@ -20,7 +21,7 @@ import {
 var root = Function("return this")() || (42, eval)("this");
 
 const defaultSettings = {
-  proxyIf: function() {
+  proxyIf: function () {
     return false;
   },
   proxyUrl: "/proxy",
@@ -30,11 +31,11 @@ const defaultSettings = {
   cookiePath: "/",
   initialCredentials: null,
 
-  passwordResetSuccessUrl: function() {
+  passwordResetSuccessUrl: function () {
     return root.location.href;
   },
 
-  confirmationSuccessUrl: function() {
+  confirmationSuccessUrl: function () {
     return root.location.href;
   },
 
@@ -46,20 +47,20 @@ const defaultSettings = {
     uid: "{{ uid }}"
   },
 
-  parseExpiry: function(headers) {
+  parseExpiry: function (headers) {
     // convert from ruby time (seconds) to js time (millis)
     return parseInt(headers["expiry"], 10) * 1000 || null;
   },
 
-  handleLoginResponse: function(resp) {
+  handleLoginResponse: function (resp) {
     return resp.data;
   },
 
-  handleAccountUpdateResponse: function(resp) {
+  handleAccountUpdateResponse: function (resp) {
     return resp.data;
   },
 
-  handleTokenValidationResponse: function(resp) {
+  handleTokenValidationResponse: function (resp) {
     return resp.data;
   }
 };
@@ -72,8 +73,6 @@ export function applyConfig({
   reset = false
 } = {}) {
   let currentEndpointKey;
-  debugger;
-  console.log("ok ok ok");
 
   if (reset) {
     resetConfig();
@@ -85,10 +84,7 @@ export function applyConfig({
 
   setCurrentSettings(extend({}, defaultSettings, settings));
 
-  let { defaultEndpointKey, currentEndpoint } = parseEndpointConfig(
-    endpoint,
-    getInitialEndpointKey()
-  );
+  let {defaultEndpointKey, currentEndpoint} = parseEndpointConfig(endpoint, getInitialEndpointKey());
 
   if (!currentEndpointKey) {
     currentEndpointKey = defaultEndpointKey;
@@ -98,37 +94,25 @@ export function applyConfig({
   setDefaultEndpointKey(defaultEndpointKey);
   setCurrentEndpoint(currentEndpoint);
 
-  dispatch(
-    setEndpointKeys(
-      Object.keys(currentEndpoint),
-      currentEndpointKey,
-      defaultEndpointKey
-    )
-  );
+  dispatch(setEndpointKeys(Object.keys(currentEndpoint), currentEndpointKey, defaultEndpointKey));
   setCurrentEndpointKey(currentEndpointKey);
 
   let savedCreds = retrieveData(C.SAVED_CREDS_KEY);
 
   if (getCurrentSettings().initialCredentials) {
-    debugger;
     // skip initial headers check (i.e. check was already done server-side)
-    let { user, headers } = getCurrentSettings().initialCredentials;
+
+    let headers = getCurrentSettings().initialCredentials;
     persistData(C.SAVED_CREDS_KEY, headers);
-    return Promise.resolve(user);
+    return fetch(`${getApiUrl(currentEndpointKey)}${currentEndpoint[currentEndpointKey].tokenValidationPath}`).then(response => {
+      return parseResponse(response, () => (removeData(C.SAVED_CREDS_KEY))).then(({data}) => (data));
+    });
   } else if (savedCreds) {
     // verify session credentials with API
-    return fetch(
-      `${getApiUrl(currentEndpointKey)}${
-        currentEndpoint[currentEndpointKey].tokenValidationPath
-      }`
-    ).then(response => {
-      if (response.status >= 200 && response.status < 300) {
-        return response.json().then(({ data }) => data);
-      }
-      removeData(C.SAVED_CREDS_KEY);
-      return Promise.reject({ reason: "No credentials." });
+    return fetch(`${getApiUrl(currentEndpointKey)}${currentEndpoint[currentEndpointKey].tokenValidationPath}`).then(response => {
+      return parseResponse(response, () => (removeData(C.SAVED_CREDS_KEY))).then(({data}) => (data));
     });
   } else {
-    return Promise.reject({ reason: "No credentials." });
+    return Promise.reject({reason: "No credentials."});
   }
 }

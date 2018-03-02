@@ -1,8 +1,8 @@
 import Cookies from "browser-cookies";
 import * as C from "./constants";
 
-// even though this code shouldn't be used server-side, node will throw
-// errors if "window" is used
+// even though this code shouldn't be used server-side, node will throw errors
+// if "window" is used
 var root = Function("return this")() || (42, eval)("this");
 
 // stateful variables that persist throughout session
@@ -60,7 +60,9 @@ export function destroySession() {
 
     // kill all local storage keys
     if (root.localStorage) {
-      root.localStorage.removeItem(key);
+      root
+        .localStorage
+        .removeItem(key);
     }
 
     // remove from base path in case config is not specified
@@ -75,10 +77,7 @@ function unescapeQuotes(val) {
 }
 
 export function getInitialEndpointKey() {
-  return unescapeQuotes(
-    Cookies.get(C.SAVED_CONFIG_KEY) ||
-      (root.localStorage && root.localStorage.getItem(C.SAVED_CONFIG_KEY))
-  );
+  return unescapeQuotes(Cookies.get(C.SAVED_CONFIG_KEY) || (root.localStorage && root.localStorage.getItem(C.SAVED_CONFIG_KEY)));
 }
 
 // TODO: make this really work
@@ -98,55 +97,42 @@ export function getSessionEndpoint(k) {
 // only should work for current session
 export function getDestroyAccountUrl(endpointKey) {
   return `${getApiUrl(endpointKey)}${
-    getSessionEndpoint(endpointKey).accountDeletePath
-  }`;
+  getSessionEndpoint(endpointKey).accountDeletePath}`;
 }
 
 // only should work for current session
 export function getSignOutUrl(endpointKey) {
   return `${getApiUrl(endpointKey)}${
-    getSessionEndpoint(endpointKey).signOutPath
-  }`;
+  getSessionEndpoint(endpointKey).signOutPath}`;
 }
 
 export function getEmailSignInUrl(endpointKey) {
   return `${getApiUrl(endpointKey)}${
-    getSessionEndpoint(endpointKey).emailSignInPath
-  }`;
+  getSessionEndpoint(endpointKey).emailSignInPath}`;
 }
 
 export function getEmailSignUpUrl(endpointKey) {
   return `${getApiUrl(endpointKey)}${
-    getSessionEndpoint(endpointKey).emailRegistrationPath
-  }?config_name=${endpointKey}`;
+  getSessionEndpoint(endpointKey).emailRegistrationPath}?config_name=${endpointKey}`;
 }
 
 export function getPasswordResetRequestUrl(endpointKey) {
   return `${getApiUrl(endpointKey)}${
-    getSessionEndpoint(endpointKey).passwordResetPath
-  }?config_name=${endpointKey}`;
+  getSessionEndpoint(endpointKey).passwordResetPath}?config_name=${endpointKey}`;
 }
 
 export function getPasswordUpdateUrl(endpointKey) {
   return `${getApiUrl(endpointKey)}${
-    getSessionEndpoint(endpointKey).passwordUpdatePath
-  }`;
+  getSessionEndpoint(endpointKey).passwordUpdatePath}`;
 }
 
 export function getTokenValidationPath(endpointKey) {
   return `${getApiUrl(endpointKey)}${
-    getSessionEndpoint(endpointKey).tokenValidationPath
-  }`;
+  getSessionEndpoint(endpointKey).tokenValidationPath}`;
 }
 
-export function getOAuthUrl({ provider, params, endpointKey }) {
-  var oAuthUrl =
-    getApiUrl(endpointKey) +
-    getSessionEndpoint(endpointKey).authProviderPaths[provider] +
-    "?auth_origin_url=" +
-    encodeURIComponent(root.location.href) +
-    "&config_name=" +
-    encodeURIComponent(getSessionEndpointKey(endpointKey));
+export function getOAuthUrl({provider, params, endpointKey}) {
+  var oAuthUrl = getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).authProviderPaths[provider] + "?auth_origin_url=" + encodeURIComponent(root.location.href) + "&config_name=" + encodeURIComponent(getSessionEndpointKey(endpointKey));
 
   if (params) {
     for (var key in params) {
@@ -161,11 +147,17 @@ export function getOAuthUrl({ provider, params, endpointKey }) {
 }
 
 export function getConfirmationSuccessUrl() {
-  return root.authState.currentSettings.confirmationSuccessUrl();
+  return root
+    .authState
+    .currentSettings
+    .confirmationSuccessUrl();
 }
 
 export function getPasswordResetRedirectUrl() {
-  return root.authState.currentSettings.confirmationSuccessUrl();
+  return root
+    .authState
+    .currentSettings
+    .confirmationSuccessUrl();
 }
 
 export function getApiUrl(key) {
@@ -180,7 +172,9 @@ export function getTokenFormat() {
 export function removeData(key) {
   switch (root.authState.currentSettings.storage) {
     case "localStorage":
-      root.localStorage.removeItem(key);
+      root
+        .localStorage
+        .removeItem(key);
       break;
     default:
       Cookies.erase(key);
@@ -189,12 +183,12 @@ export function removeData(key) {
 
 export function persistData(key, val) {
   val = JSON.stringify(val);
-  console.log(val);
-  debugger;
 
   switch (root.authState.currentSettings.storage) {
     case "localStorage":
-      root.localStorage.setItem(key, val);
+      root
+        .localStorage
+        .setItem(key, val);
       break;
 
     default:
@@ -211,7 +205,9 @@ export function retrieveData(key, storage) {
 
   switch (storage || root.authState.currentSettings.storage) {
     case "localStorage":
-      val = root.localStorage && root.localStorage.getItem(key);
+      val = root.localStorage && root
+        .localStorage
+        .getItem(key);
       break;
 
     default:
