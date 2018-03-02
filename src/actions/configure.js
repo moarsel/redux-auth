@@ -66,6 +66,7 @@ export function configure(endpoint = {}, settings = {}) {
           ({headers, user, firstTimeLogin, mustResetPassword} = serverCreds);
 
           if (user) {
+            console.log('somehow got here')
             dispatch(authenticateComplete(user));
 
             // do NOT send initial validation request. instead use the credentials that were
@@ -86,6 +87,7 @@ export function configure(endpoint = {}, settings = {}) {
       firstTimeLogin = authRedirectHeaders.account_confirmation_success
         ? true
         : false;
+      console.log(authRedirectHeaders)
 
       if (authRedirectPath) {
         dispatch(push({pathname: authRedirectPath}));
@@ -106,6 +108,7 @@ export function configure(endpoint = {}, settings = {}) {
 
     return promise.then(user => {
       dispatch(authenticateComplete(user));
+      console.log(user, mustResetPassword)
 
       if (firstTimeLogin) {
         dispatch(showFirstTimeLoginSuccessModal());
